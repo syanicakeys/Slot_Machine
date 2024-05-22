@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href='https://fonts.googleapis.com/css?family=Press Start 2P|DotGothic16' rel='stylesheet'>
+<title>Number Slot Machine</title>
+<style>
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: 'Press Start 2P';
+  margin: 0;
+  padding: 0;
+ 
+
+} 
+
+.ghosts-container {
+    position: absolute;
+    width: 100%;
+    top: -45px;
+    text-align: center; 
+	  overflow: hidden; 
+}
+
+img.pacmanghost {
+    height: 150px;
+}
+
+#slot-machine {
+
+  width: 35%;
+  margin: 30px auto;
+  background-color: #000;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  background: url('pacman.jpg') center center;
+ background-size: auto;
+}
+
+@keyframes pacmanGlow {
+  0% {
+    text-shadow: 0 0 20px #ff0, 0 0 100px #0000FF;
+  }
+  50% {
+    text-shadow: none;
+  }
+  100% {
+    text-shadow: 0 0 20px #ff0, 0 0 100px #0000FF;
+  }
+}
+h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #fff;
+  text-transform: uppercase;
+  animation: pacmanGlow 1.2s infinite;
+}
+
+input[type="text"] {
+  width: 30px;
+  height: 30px;
+  margin: 15px 5px;
+  text-align: center;
+  border: 2px solid #ffeb3b; /* Yellow border */
+  border-radius: 5px;
+  font-size: 20px;
+  background-color: #ffeb3b; /* Yellow background */
+  color: #333; /* Dark text color */
+  
+  font-family: 'DotGothic16';
+}
+
+input[type="text"].resulting-num {
+  width: 70px;
+  height: 100px;
+  margin: 0 30px;
+  font-size: 36px;
+  border: 2px solid #ffeb3b; /* Yellow border */
+  border-radius: 10px;
+  background: linear-gradient(to bottom, #ffeb3b, #f44336); /* Yellow to Red gradient */
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5); /* Dark shadow */
+  
+  font-family: 'DotGothic16';
+}
+
+input[type="text"].bet-amount {
+  width: 205px;
+  height: 30px;
+  margin: 15px 5px;
+  text-align: center;
+  border: 2px solid #ffeb3b; /* Yellow border */
+  border-radius: 5px;
+  font-size: 20px;
+  background-color: #ffeb3b; /* Yellow background */
+  color: #333; /* Dark text color */
+  
+  font-family: 'DotGothic16';
+}
+
+button {
+  margin-top: 20px;
+  font-size: 24px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: #ff0; /* Pacman yellow */
+  color: #000; /* Black text color */
+  width: 70%;
+  max-width: 500px;
+  transition: background-color 0.3s ease;
+
+  font-family: 'DotGothic16';
+}
+
+button:hover {
+  background-color: #ff8c00; /* Darker Pacman yellow */
+}
+
+p {
+  font-size: 18px;
+  margin: 10px;
+  color: #fff; /* White text color */
+}
+
+#result {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #fff; /* White text color */
+}
+
+#history-container {
+
+  margin-top: 30px;
+  text-align: center;
+}
+
+.history {
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: #000; /* Black background */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+}
+
+.history p {
+  font-size: 14px;
+  margin: 5px 0;
+   align-items:center;
+  color: #fff; /* White text color */
+}
+
+.bet-box {
+  display: inline-block;
+  width: 30px;
+  background-color: #ffc107; /* Pacman yellow */
+  border: 2px solid #ff9800; /* Pacman orange */
+  border-radius: 5px;
+  margin: 15px 5px;
+}
+
+#multiplier {
+  font-size: 24px;
+  color: #ff1744; /* Pacman red */
+  margin-right: 120px; 
+}
+
+#balance {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ff3d00; /* Darker Pacman orange */
+  margin-left: 120px; 
+}
+
+input[type="text"].text-result {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  width: 350px;
+  height: 30px;
+  border: 2px solid #ff3d00; /* Darker Pacman orange */
+  border-radius: 8px;
+  padding: 5px;
+  background-color: #ffecb3; /* Lighter Pacman yellow */
+  color: #ff3d00; /* Darker Pacman orange */
+  
+  font-family: 'DotGothic16';
+}
+
+#reset-btn {
+  display: none;
+   font-family: 'DotGothic16';
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.button-group button {
+  width: 35%;
+  padding: 10px 20px;
+  font-size: 18px;
+  border: 2px solid #ff3d00; /* Darker Pacman orange */
+  border-radius: 8px;
+  background-color: #ffab40; /* Lighter Pacman orange */
+  color: #fff;
+  margin: 0 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+   font-family: 'DotGothic16';
+}
+
+.button-group button:hover {
+  background-color: #ff6d00; /* Darker hover color */
+}
+
+.input-container {
+  display: flex;
+  justify-content: center;
+  margin: 0 10px;
+}
+
+.multiplier-balance-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 400px;
+  position: relative;
+}
+
+.multiplier-balance {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#multiplier-table {}
+
+#multiplier-table td {
+  width: 175px;
+}
+
+#multiplier {
+  text-align: left;
+}
+
+#balance {
+  text-align: right;
+}
+
+</style>
+</head>
+<body>
+  <div class="ghosts-container">
+        <marquee class="ghosts" direction="right" loop="infinite" scrollamount="10">
+            <img src="ghosts.png" alt="Pacman Ghosts" class="pacmanghost">
+			<img src="ghosts.png" alt="Pacman Ghosts" class="pacmanghost">
+			<img src="ghosts.png" alt="Pacman Ghosts" class="pacmanghost">
+			<img src="ghosts.png" alt="Pacman Ghosts" class="pacmanghost">
+			
+        </marquee>
+    </div>
+<div id="slot-machine">
+
+    <h1>SLOT MACHINE</h1>
+    <div id="resultingNum">
+        <input type="text" id="result1" class="bet-box resulting-num " disabled>
+        <input type="text" id="result2" class="bet-box resulting-num " disabled>
+        <input type="text" id="result3" class="bet-box resulting-num " disabled>
+    </div>
+    <div class="input-container"> 
+        <div>
+            <input type="text" id="bet1" class="bet-box" maxlength="1" disabled> 
+            <input type="text" id="bet2" class="bet-box" maxlength="1" disabled> 
+            <input type="text" id="bet3" class="bet-box" maxlength="1" disabled> 
+        </div>
+        <div>
+            <input type="text" id="bet-amount" class="bet-amount" disabled>
+        </div>
+    </div>
+    
+    <div class="multiplier-balance-container">
+     
+        <table id="multiplier-table" >
+            <tr>
+                
+                <td id="multiplier">2</td>
+				<td id="balance">1000.00</td>
+            </tr>
+           
+        </table>
+    </div>
+    <br>
+    <input type="text" id="text-result" class="text-result" value="" readonly>
+    <br>
+    <button id="set-btn" onclick="setBet()">Set</button>
+    <div class="button-group">
+        <button id="review-btn" onclick="review()">Review</button>
+        <button id="reset-btn" onclick="reset()" >Reset</button>
+    </div>
+ 
+</div>
+<div id="history-container">
+   <div id="history"></div>
+ </div>
+
+
+<script>
+    let balance = 1000.00;
+    let multiplier = 2;
+    let history = [];
+
+    function setBet() {
+        document.getElementById("bet1").disabled = false;
+        document.getElementById("bet2").disabled = false;
+        document.getElementById("bet3").disabled = false;
+        document.getElementById("bet-amount").disabled = false; 
+        document.getElementById("set-btn").innerText = "Play";
+        document.getElementById("set-btn").setAttribute("onclick", "play()");
+    }
+
+    function play() {
+        let bet1 = parseInt(document.getElementById("bet1").value);
+        let bet2 = parseInt(document.getElementById("bet2").value);
+        let bet3 = parseInt(document.getElementById("bet3").value);
+        let betAmount = parseFloat(document.getElementById("bet-amount").value);
+
+        if (isNaN(bet1) || isNaN(bet2) || isNaN(bet3) || isNaN(betAmount)) {
+            alert("Please enter bets for all slots and a valid bet amount.");
+            return;
+        }
+
+        if (bet1 <= 0 || bet2 <= 0 || bet3 <= 0 || betAmount <= 0) {
+            alert("Please enter a valid bet amount.");
+            return;
+        }
+
+        if (betAmount > balance) {
+            alert("You don't have enough balance to place this bet.");
+            return;
+        }
+	
+
+        var randomNumber = Math.floor(Math.random() * 4);
+        var num1, num2, num3;
+
+        if (randomNumber === 0) {
+            // 25% chance of winning
+            num1 = bet1;
+            num2 = bet2;
+            num3 = bet3;
+        } else {
+   
+            num1 = Math.floor(Math.random() * 10);
+            num2 = Math.floor(Math.random() * 10);
+            num3 = Math.floor(Math.random() * 10);
+        }
+
+        let result = "Lose";
+        if (num1 === bet1 && num2 === bet2 && num3 === bet3) {
+            result = "Win";
+            balance += betAmount * multiplier;
+            multiplier++;
+        } else {
+            balance -= betAmount;
+            multiplier = 2;
+        }
+
+        document.getElementById("balance").innerText = balance.toFixed(2);
+        document.getElementById("multiplier").innerText = multiplier;
+        document.getElementById("text-result").value = result.toUpperCase();
+        
+        document.getElementById("result1").value = num1;
+        document.getElementById("result2").value = num2;
+        document.getElementById("result3").value = num3;
+
+        document.getElementById("set-btn").innerText = "Set";
+        document.getElementById("set-btn").setAttribute("onclick", "setBet()");
+        
+        document.getElementById("bet1").disabled = true;
+        document.getElementById("bet2").disabled = true;
+        document.getElementById("bet3").disabled = true;
+        document.getElementById("bet-amount").disabled = true;
+
+        history.push(`Bet: ${betAmount.toFixed(2)}, Result: ${result}`);
+
+        if (balance <= 0) {
+            document.getElementById("reset-btn").style.display = "block";
+        }
+    }
+
+    function reset() {
+        balance = 1000.00;
+        multiplier = 2;
+        history = [];
+        document.getElementById("result1").value = ""; 
+        document.getElementById("result2").value = "";
+        document.getElementById("result3").value = "";
+        document.getElementById("bet1").value = "";
+        document.getElementById("bet2").value = "";
+        document.getElementById("bet3").value = "";
+        document.getElementById("bet-amount").value = ""; 
+        document.getElementById("text-result").value = ""; 
+        document.getElementById("balance").innerText = balance.toFixed(2); // Update balance text
+        document.getElementById("reset-btn").style.display = "none";
+    }
+
+    function review() {
+        let historyText = "";
+        for (let i = 0; i < history.length; i++) {
+            historyText += `<p>${history[i]}</p>`;
+        }
+        document.getElementById("history").innerHTML = historyText;
+    }
+</script>
+</body>
+</html>
